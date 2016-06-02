@@ -1,12 +1,12 @@
 import functions as vf
 from tkinter import *
 
-print('Henter vejr side...')
+print('Fetching weather site...')
 file_path = vf.get_image()        # Downloads image and returns path to image
-print('Færdig! Viser oversigt...')
+print('Done! Displaying forecast...')
 
 root = Tk()
-root.title('Vejroversigt')
+root.title('Weather forecast.')
 
 # Display image
 image = PhotoImage(file=file_path)
