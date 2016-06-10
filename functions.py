@@ -5,7 +5,7 @@ import datetime
 import sys
 
 
-def get_image():
+def get_image(css_selector, path_modifier):
     """Downloads the weather forecast as an image from DMI.dk"""
     url = 'http://www.dmi.dk/vejr/til-lands/byvejr/by/vis/DK/7000/Fredericia,%20Danmark'
     os.makedirs('images', exist_ok=True)
@@ -17,7 +17,7 @@ def get_image():
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
 
     # Find the url to the weather image
-    weather_img = soup.select('#dk_days_two_forecast')
+    weather_img = soup.select(css_selector)
 
     if not weather_img:
         print("Kunne desværre ikke finde vejrudsigten.")
@@ -29,7 +29,7 @@ def get_image():
         res.raise_for_status()
 
         # Save image TODO: Clean up image path
-        file_name = str(datetime.date.today()) + ".png"
+        file_name = str(datetime.date.today()) + path_modifier + ".png"
         path = os.path.join('images', file_name)
         image_file = open(path, 'wb')
         for chunk in res.iter_content(100000):
