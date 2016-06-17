@@ -4,17 +4,23 @@ import os
 import datetime
 import sys
 
-
-def get_image(css_selector, path_modifier):
-    """Downloads the weather forecast as an image from DMI.dk"""
+def get_soup():
     url = 'http://www.dmi.dk/vejr/til-lands/byvejr/by/vis/DK/7000/Fredericia,%20Danmark'
-    os.makedirs('images', exist_ok=True)
 
     # Download page
     res = requests.get(url)
     res.raise_for_status()
 
+    # Create soup
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
+    # Return soup
+    return soup
+
+def get_image(css_selector, path_modifier):
+    """Downloads the weather forecast as an image from DMI.dk"""
+    os.makedirs('images', exist_ok=True)
+
+    soup = get_soup()
 
     # Find the url to the weather image
     weather_img = soup.select(css_selector)
@@ -28,7 +34,7 @@ def get_image(css_selector, path_modifier):
         res = requests.get(img_url)
         res.raise_for_status()
 
-        # Save image TODO: Clean up image path
+        # Save image
         file_name = str(datetime.date.today()) + path_modifier + ".png"
         path = os.path.join('images', file_name)
         image_file = open(path, 'wb')
@@ -36,6 +42,13 @@ def get_image(css_selector, path_modifier):
             image_file.write(chunk)
         image_file.close()
         return path
+
+
+def get_warning():
+    soup = get_soup()
+
+    warning_status = soup.select('.warning-content a')
+    return warning_status[0].text
 
 
 def bindings(root):
