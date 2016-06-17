@@ -43,13 +43,13 @@ def get_image(css_selector, path_modifier):
         image_file.close()
         return path
 
-
 def get_warning():
+    # Get soup object
     soup = get_soup()
-
+    # Select warning text
     warning_status = soup.select('.warning-content a')
+    # Return it
     return warning_status[0].text
-
 
 def bindings(root):
     """Sets exit key bindings"""
