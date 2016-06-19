@@ -4,8 +4,10 @@ import os
 import datetime
 import sys
 
+
 def get_soup():
-    url = 'http://www.dmi.dk/vejr/til-lands/byvejr/by/vis/DK/7000/Fredericia,%20Danmark'
+    url = 'http://www.dmi.dk/vejr/til-lands/byvejr/by/vis/DK/7000/' \
+          'Fredericia,%20Danmark'
 
     # Download page
     res = requests.get(url)
@@ -15,6 +17,7 @@ def get_soup():
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
     # Return soup
     return soup
+
 
 def get_image(css_selector, path_modifier):
     """Downloads the weather forecast as an image from DMI.dk"""
@@ -43,6 +46,7 @@ def get_image(css_selector, path_modifier):
         image_file.close()
         return path
 
+
 def get_warning():
     # Get soup object
     soup = get_soup()
@@ -50,6 +54,7 @@ def get_warning():
     warning_status = soup.select('.warning-content a')
     # Return it
     return warning_status[0].text
+
 
 def bindings(root):
     """Sets exit key bindings"""
