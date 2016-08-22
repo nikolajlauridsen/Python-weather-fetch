@@ -11,12 +11,14 @@ def get_soup():
 
     # Download page
     res = requests.get(url)
-    res.raise_for_status()
+    try:
+        res.raise_for_status()
+    except Exception as exc:
+        print("An Error {} has occured!".format(exc))
 
     # Create soup
     soup = bs4.BeautifulSoup(res.text, 'html.parser')
-    # Return soup
-    return soup
+    return soup  
 
 
 def get_image(css_selector, path_modifier):
@@ -35,7 +37,11 @@ def get_image(css_selector, path_modifier):
 
         # Download image
         res = requests.get(img_url)
-        res.raise_for_status()
+        try:
+            res.raise_for_status()
+        except requests.exceptions.MissingSchema:
+            # skips the image if not valid
+            print("An Error occured wiht the URL!")
 
         # Save image
         file_name = str(datetime.date.today()) + path_modifier + ".png"
@@ -48,12 +54,9 @@ def get_image(css_selector, path_modifier):
 
 
 def get_warning():
-    # Get soup object
-    soup = get_soup()
-    # Select warning text
-    warning_status = soup.select('.warning-content a')
-    # Return it
-    return warning_status[0].text
+    soup = get_soup()                                   # get soup object
+    warning_status = soup.select('.warning-content a')  # select warning text
+    return warning_status[0].text                       # return the warning
 
 
 def bindings(root):
